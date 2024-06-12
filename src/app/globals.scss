@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+$primary-color: #254336;
+$secondary-color: #6b8a7a;
+$ternary-color: #b7b597;
+$lightBlue: #dad3be;
+$lightwhite: #eef7ff;
+$whitecolor: #ffffff;
+$border-color: #93b1a6;
+$errored-color: #e21818;
+$success-color: #009688;
+$warning-color: #ffc107;
+$textblack: #333333;
+$textlightblack: #999999;
+$primary-font: "Bebas Neue", sans-serif;
+$secondary-font: "Montserrat", sans-serif;
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.mainContainerBody {
+    margin-left: 80px;
+    width: calc(80% - 80px);
+    height: 100vh;
+    overflow: hidden;
+    scroll-behavior: smooth;
+}
+.mainContainerBody::-webkit-scrollbar {
+    display: none;
+}
+
+.bi {
+    color: $textblack;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.bi-edit-fill:hover {
+    color: $warning-color;
+    transform: scale(1.15);
+    transition: 0.2s;
+}
+
+.bi-copy-fill:hover {
+    color: $success-color;
+    transform: scale(1.15);
+    transition: 0.2s;
+}
+
+.bi-trash-fill:hover {
+    color: $errored-color;
+    transform: scale(1.15);
+    transition: 0.2s;
+}
+
+.fw-bold {
+    font-weight: bold;
+}

@@ -1,0 +1,53 @@
+@import "../../app//globals.scss";
+
+.taskItemContainer {
+    // border: 1px solid red;
+    width: calc(100% - 16px);
+    padding: 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    background-color: $lightwhite;
+
+    .task-data {
+        width: calc(100% - 120px);
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            // Reset default styles
+            background-color: transparent;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            border: 1px solid $ternary-color;
+
+            // Custom
+            &:checked {
+                background-color: $primary-color;
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+            }
+        }
+        .para {
+            margin: 0;
+            font-size: 18px;
+            color: $textblack;
+            cursor: pointer;
+        }
+    }
+    .btn-cntnr {
+        width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

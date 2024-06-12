@@ -1,0 +1,65 @@
+@import "../globals.scss";
+
+.loginPage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $lightwhite;
+
+    .container {
+        width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: $whitecolor;
+        border: 1px solid $lightBlue;
+
+        h3{
+            margin: 0;
+            margin-top: 8px;
+            font-size: 22px;
+            color: $primary-color;
+
+        }
+        p{
+            margin: 8px 0;
+            color: $textlightblack;
+        }
+        .form-group {
+            margin-bottom: 20px;
+
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            input {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid $lightBlue;
+                border-radius: 4px;
+            }
+
+            .error {
+                color: $errored-color;
+                font-size: 12px;
+            }
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            font-weight: 600;
+            border: none;
+            background-color: $primary-color;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            &:hover {
+                background-color: darken($success-color, 10%);
+            }
+        }
+    }
+}

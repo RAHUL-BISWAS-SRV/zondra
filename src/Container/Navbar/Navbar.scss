@@ -1,0 +1,87 @@
+@import '../../app/globals.scss';
+
+
+.navbarComponent{
+    position: absolute;
+    width: 80px;
+    height: 100vh;
+    background-color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+
+    .navbarContainer{
+        width: 100%;
+        height: 95%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        .navTopContainer{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+
+            .logoimg{
+                width: 70px;
+            }
+
+            .itemsContainer{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+
+                .itemLinkBox{
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    .icon{
+                        font-size: 28px;
+                        color: $whitecolor;
+                        transition: 0.3s;
+                    }
+                }
+                .itemLinkBox:hover{
+                    .icon{
+                        transform: scale(1.2);
+                        transition: 0.3s;
+                    }
+                }
+            }
+        }
+        .navButtomContainer{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+
+            .itemLinkBox{
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                .icon{
+                    font-size: 28px;
+                    color: $whitecolor;
+                    transition: 0.3s;
+                }
+            }
+            .itemLinkBox:hover{
+                .icon{
+                    transform: scale(1.2);
+                    transition: 0.3s;
+                }
+            }
+        }
+    }
+}
+

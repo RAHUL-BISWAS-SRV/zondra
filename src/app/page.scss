@@ -1,0 +1,103 @@
+@import "./globals.scss";
+
+$secondary-color: #ffffff;
+
+.maincontainerHome {
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    scroll-behavior: smooth;
+    background-color: $lightwhite;
+    .home-page {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+        .hero,
+        .about,
+        .todo-details,
+        .features,
+        .reviews,
+        .contact,
+        .footer {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+
+            .content {
+                flex: 1;
+                padding: 20px;
+
+                h1 {
+                    margin: 0;
+                    font-size: 48px;
+                    color: $primary-color;
+                    margin-bottom: 20px;
+                }
+
+                h2 {
+                    margin: 0;
+                    color: $primary-color;
+                    margin-bottom: 20px;
+                }
+
+                p {
+                    margin: 0;
+                    color: $textblack;
+                    margin-bottom: 20px;
+                    line-height: 1.6;
+                }
+
+                img {
+                    max-width: 100%;
+                    border-radius: 8px;
+                }
+            }
+
+            .image {
+                flex: 1;
+                padding: 20px;
+
+                img {
+                    max-width: 100%;
+                    border-radius: 8px;
+                }
+            }
+
+            ol{
+                li{
+                    color: $textblack;
+                    strong{
+                        color: $primary-color;
+                    }
+                }
+            }
+        }
+
+        .footer {
+            background-color: $primary-color;
+            color: $secondary-color;
+            text-align: center;
+            padding: 20px;
+
+            p {
+                margin: 0;
+            }
+        }
+        .login{
+            text-decoration: none;
+            width: 200px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 18px;
+            border: none;
+            background-color: $primary-color;
+            color: $whitecolor;
+
+        }
+    }
+}
