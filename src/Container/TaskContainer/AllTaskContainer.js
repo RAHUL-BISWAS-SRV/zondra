@@ -1,15 +1,48 @@
 import TaskItemBox from "../TaskItemBox/TaskItemBox";
+import './AllTaskContainer.scss';
+import { useContext } from "react";
+import { GlobalStore } from "@/ContextAPI/Store";
+import { getFilterTask, filterTaskContainerItem, clearTrashTask } from "@/Functions/Functions";
 
-const AllTaskContainer = () => {
-  const tasks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const AllTaskContainer = (props) => {
+  const {isAuth, setTaskData, setAllTasks, activeTaskBtn} = useContext(GlobalStore);
+
+
+  const clearAlltrashTaskHandler = async () => {
+    const result = await clearTrashTask(isAuth);
+    if (result.success) {
+      updateTaskList()
+    }
+  };
+  async function updateTaskList() {
+    const result = await getFilterTask(isAuth);
+    if (result) {
+      setAllTasks(result);
+      const filterTask = await filterTaskContainerItem(activeTaskBtn, result);
+      setTaskData(filterTask);
+    }
+  }
+
   return (
     <div className="AllTaskListContainer">
-      <p className="titleHead fw-bold">Today Completed Task</p>
-      <div className="ActiveTaskBox">
-        {tasks.map((task) => {
-          return <TaskItemBox key={task} />;
-        })}
+      {/* <p className="titleHead fw-bold">{props.data?.content}</p> */}
+      <div className="trashHeaderBox">
+        <p className="titleHead fw-bold">{props.data?.content}</p>
+        {props.data.id === "trash" && (
+          <p className="clearBtn fw-bold" onClick={clearAlltrashTaskHandler}>Clear Trash</p>
+        )}
       </div>
+      {props.data?.tasks?.length > 0 ? (
+        <div className="ActiveTaskBox">
+          {props.data.tasks.map((task) => {
+            return <TaskItemBox task={task} key={task.id} />;
+          })}
+        </div>
+      ) : (
+        <div className="activeTaskStatus">
+          <h3 className="fw-bold">Opps! You Have No Task</h3>
+        </div>
+      )}
     </div>
   );
 };

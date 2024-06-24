@@ -1,10 +1,13 @@
 "use client";
-import { useState } from "react";
+import  "./login.scss";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextField, Button, IconButton, Tab, Tabs } from "@mui/material";
 import { Email, Lock, Person } from "@mui/icons-material";
-import  "./login.scss"; // Assuming your SCSS file is here
-
+import { GlobalStore } from "@/ContextAPI/Store";
+import { useContext } from "react";
+import { loginUsers, registerNewUser } from "@/Functions/Functions";
+import { useRouter } from "next/navigation";
 const LoginForm = ({ onSubmit }) => {
   const {
     register,
@@ -152,21 +155,33 @@ const SignupForm = ({ onSubmit }) => {
   );
 };
 
-const Page = () => {
-  const [activeTab, setActiveTab] = useState("login");
 
+const Page = () => {
+  // const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState("login");
+  const {setIsAuth, isAuth} = useContext(GlobalStore);
+  const redirect = useRouter();
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
-  const handleLogin = (data) => {
-    console.log("Login Data:", data);
+  const handleLogin = async (data) => {
+    const result = await loginUsers(data);
+    if(result.status){
+      setIsAuth(result.token);
+      redirect.push("/tasks");
+    }
+    alert(result.message);
   };
 
-  const handleSignup = (data) => {
-    console.log("Signup Data:", data);
+  const handleSignup = async (data) => {
+    const result = await registerNewUser(data);
+    if(result.status){
+      setIsAuth(result.token);
+      redirect.push("/tasks");
+    }
+    alert(result.message);
   };
-
   return (
     <div className="loginPage">
       <div className="container">

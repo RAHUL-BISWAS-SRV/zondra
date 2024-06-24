@@ -1,4 +1,3 @@
-
 export const taskFilterList = [
   {
     id: "today",
@@ -82,6 +81,12 @@ export const taskHistoryList = [
     id: "complete",
     title: "Complete",
     icon: "✅", // Check mark icon for complete tasks
+    count: 10, // Example count, you can replace it with dynamic values
+  },
+  {
+    id: "pending",
+    title: "Pending",
+    icon: "⏳", // Hourglass icon for pending tasks
     count: 10, // Example count, you can replace it with dynamic values
   },
   {

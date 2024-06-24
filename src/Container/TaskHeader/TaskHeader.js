@@ -1,14 +1,23 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import AddTaskIcon from "@mui/icons-material/AddTask";
+import { GlobalStore } from "@/ContextAPI/Store";
+import { getMotivateMessage } from "@/Functions/Functions";
 
-const TaskHeader = () => {
+const TaskHeader = (props) => {
   const [time, setTime] = useState(new Date());
+  const {userDetails} = useContext(GlobalStore);
+  const [motivateMessage, setMotivateMessage] = useState(false);
+  const [formattedDate, setFormattedDate] = useState('');
 
   useEffect(() => {
     const intervalId = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(intervalId);
   }, []);
+  useEffect(() =>{
+    setMotivateMessage(getMotivateMessage());
+    setFormattedDate(time.toLocaleDateString())
+  },[]);
 
   const formatTime = (date) => {
     let hours = date.getHours();
@@ -21,14 +30,14 @@ const TaskHeader = () => {
   return (
     <div className="headerBox">
       <div className="leftHeaderBox">
-        <div className="fw-bold">Hello Dear, Good Morning</div>
+        <div className="fw-bold">Hello {userDetails?.name?.split(' ')[0]}, {motivateMessage}</div>
       </div>
       <div className="rightHeaderBox">
         <div className="add-btn">
-          <AddTaskIcon className="addBtnIcon" />
+          <AddTaskIcon className="addBtnIcon" onClick={()=>props.setTaskBar(!props.taskbar)}/>
         </div>
         <div className="fw-bold" id="Datediv">
-          Date: {time.toLocaleDateString()}
+          Date: {formattedDate}
         </div>
         <div className="fw-bold" id="Timediv">
           Time: {formatTime(time)}

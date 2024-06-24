@@ -1,0 +1,74 @@
+@import "../../app/globals.scss";
+
+.AllTaskListContainer {
+  width: 100%;
+  height: 80vh;
+  .trashHeaderBox {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+
+    .titleHead {
+      margin: 0;
+      font-size: 18px;
+      color: $primary-color;
+    }
+    .clearBtn {
+      margin: 0;
+      font-size: 16px;
+      color: $errored-color;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover {
+        transform: scale(1.1);
+        transition: 0.3s;
+      }
+    }
+  }
+  .ActiveTaskBox {
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary-color;
+      border-radius: 10px;
+      border: 2px solid $whitecolor;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: $success-color;
+    }
+  }
+
+  .activeTaskStatus {
+    width: 100%;
+    height: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $lightwhite;
+    border-radius: 4px;
+
+    h3 {
+      margin: 0;
+      color: $primary-color;
+    }
+  }
+}

@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import "./page.scss";
 import { Container } from "@mui/material";
@@ -7,7 +8,12 @@ import img3 from "../Assets/Images/img3.png";
 import img4 from "../Assets/Images/img4.png";
 import img5 from "../Assets/Images/img5.png";
 import img6 from "../Assets/Images/img6.png";
+import { GlobalStore } from "@/ContextAPI/Store";
+import { useContext, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 export default function Home() {
+
   return (
     <main className="maincontainerHome">
       <div className="home-page">
