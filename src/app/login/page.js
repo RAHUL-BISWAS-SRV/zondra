@@ -1,6 +1,5 @@
 "use client";
 import  "./login.scss";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextField, Button, IconButton, Tab, Tabs } from "@mui/material";
 import { Email, Lock, Person } from "@mui/icons-material";
@@ -171,7 +170,6 @@ const Page = () => {
       setIsAuth(result.token);
       redirect.push("/tasks");
     }
-    alert(result.message);
   };
 
   const handleSignup = async (data) => {
@@ -180,7 +178,6 @@ const Page = () => {
       setIsAuth(result.token);
       redirect.push("/tasks");
     }
-    alert(result.message);
   };
   return (
     <div className="loginPage">
