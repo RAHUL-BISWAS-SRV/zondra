@@ -8,15 +8,17 @@ import { removeToken } from "@/Functions/Functions";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const {setIsAuth, userDetails} = useContext(GlobalStore);
+  const { setIsAuth, userDetails, setIsLoader } = useContext(GlobalStore);
   const redirect = useRouter();
 
-  const logoutHandler = async ()=>{
-    const result = await removeToken()
+  const logoutHandler = async () => {
+    setIsLoader(true);
+    const result = await removeToken();
     setIsAuth(false);
+    setIsLoader(false);
     redirect.push("/login");
     // console.log(result);
-  }
+  };
   return (
     <div className="profilePage">
       <div className="profile-page">

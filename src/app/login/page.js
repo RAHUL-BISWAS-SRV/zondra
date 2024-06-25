@@ -1,5 +1,5 @@
 "use client";
-import  "./login.scss";
+import "./login.scss";
 import { useForm } from "react-hook-form";
 import { TextField, Button, IconButton, Tab, Tabs } from "@mui/material";
 import { Email, Lock, Person } from "@mui/icons-material";
@@ -17,8 +17,8 @@ const LoginForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-		<h3>Welcome Back!</h3>
-		<p>Please fill details and go to your dashboard.</p>
+      <h3>Welcome Back!</h3>
+      <p>Please fill details and go to your dashboard.</p>
       <div className="form-group">
         <label>Email</label>
         <TextField
@@ -73,8 +73,8 @@ const SignupForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-		<h3>Welcome to Zondra!</h3>
-		<p>Please fill all details and go to your dashboard.</p>
+      <h3>Welcome to Zondra!</h3>
+      <p>Please fill all details and go to your dashboard.</p>
       <div className="form-group">
         <label>Name</label>
         <TextField
@@ -155,37 +155,40 @@ const SignupForm = ({ onSubmit }) => {
   );
 };
 
-
 const Page = () => {
   // const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("login");
-  const {setIsAuth} = useContext(GlobalStore);
+  const { setIsAuth, setIsLoader } = useContext(GlobalStore);
   const redirect = useRouter();
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
   const handleLogin = async (data) => {
+    setIsLoader(true);
     const result = await loginUsers(data);
-    if(result.status){
+    if (result.status) {
       setIsAuth(result.token);
       redirect.push("/tasks");
     }
+    setIsLoader(false);
   };
 
   const handleSignup = async (data) => {
+    setIsLoader(true);
     const result = await registerNewUser(data);
-    if(result.status){
+    if (result.status) {
       setIsAuth(result.token);
       redirect.push("/tasks");
     }
+    setIsLoader(false);
   };
   return (
     <div className="loginPage">
       <div className="container">
         <Tabs value={activeTab} onChange={handleTabChange} centered>
-          <Tab label="Login" value="login"/>
-          <Tab label="Signup" value="signup"/>
+          <Tab label="Login" value="login" />
+          <Tab label="Signup" value="signup" />
         </Tabs>
         {activeTab === "login" && <LoginForm onSubmit={handleLogin} />}
         {activeTab === "signup" && <SignupForm onSubmit={handleSignup} />}
