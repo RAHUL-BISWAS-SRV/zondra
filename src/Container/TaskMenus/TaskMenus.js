@@ -50,7 +50,7 @@ const TaskMenus = () => {
       id: "personal",
       title: "Personal",
       icon: "🙇",
-      count: allTasks?.todayTasks?.length || 0,
+      count: allTasks?.allPersonalTasks?.length || 0,
     },
     {
       id: "shopping",
@@ -99,13 +99,13 @@ const TaskMenus = () => {
       <div className="section">
         <p className="fw-bold title">Task</p>
         <div className="list">
-          {taskFilterList.map((taskItem) => (
+          {taskFilterList.map((taskItem, index) => (
             <>
               <div
                 className={`listItem ${
                   taskItem.id === activeTaskBtn ? "active" : null
                 }`}
-                key={taskItem.id}
+                key={index}
                 onClick={() => taskContainerHandler(taskItem.id)}
               >
                 <div className="inner">
@@ -125,13 +125,13 @@ const TaskMenus = () => {
       <div className="section">
         <p className="fw-bold title">Tags</p>
         <div className="list">
-          {taskCategoryList.map((taskItem) => (
+          {taskCategoryList.map((taskItem,index) => (
             <>
               <div
                 className={`listItem ${
                   taskItem.id === activeTaskBtn ? "active" : null
                 }`}
-                key={taskItem.id}
+                key={index}
                 onClick={() => taskContainerHandler(taskItem.id)}
               >
                 <div className="inner">
@@ -151,13 +151,13 @@ const TaskMenus = () => {
       <div className="section">
         <p className="fw-bold title">History</p>
         <div className="list">
-          {taskHistoryList.map((taskItem) => (
+          {taskHistoryList.map((taskItem, index) => (
             <>
               <div
                 className={`listItem ${
                   taskItem.id === activeTaskBtn ? "active" : null
                 }`}
-                key={taskItem.id}
+                key={index}
                 onClick={() => taskContainerHandler(taskItem.id)}
               >
                 <div className="inner">

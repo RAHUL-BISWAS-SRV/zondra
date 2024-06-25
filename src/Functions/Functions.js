@@ -133,49 +133,10 @@ export function generateUUID() {
   return uuidv4();
 }
 
-// add new task function
-export const addNewTask = async (userId, taskData) => {
-  if (!userId) return "Token is required";
-  const database = getDatabase();
-  const userTaskRef = ref(database, `tasks/${userId}`);
-
-  const generatedUniqueId = uuidv4();
-
-  const newTaskdata = {
-    id: generatedUniqueId,
-    title: taskData.title,
-    category: taskData.category,
-    dueDate: taskData.dueDate,
-    status: "active",
-    timestamp: formatTimestamp(new Date().getTime()),
-  };
-
-  try {
-    const snapshot = await get(userTaskRef);
-    if (snapshot.exists()) {
-      const notes = snapshot.val();
-      const notesArray = Array.isArray(notes) ? notes : Object.values(notes);
-      notesArray.push(newTaskdata);
-      await set(userTaskRef, notesArray);
-    } else {
-      const notesArray = [newTaskdata];
-      await set(userTaskRef, notesArray);
-    }
-    return { success: true, message: "Task added successfully." };
-  } catch (error) {
-    console.error("Error adding new task:", error);
-    return {
-      success: false,
-      message: "An error occurred while adding the task.",
-    };
-  }
-};
-
 // get all tasks in the database
 export const getAllTask = async (userId) => {
   if (!userId) return "Token is required";
-  const database = getDatabase();
-  const userTaskRef = ref(database, `tasks/${userId}`);
+  const userTaskRef = ref(db, `tasks/${userId}`);
   try {
     const snapshot = await get(userTaskRef);
     if (snapshot.exists()) {
@@ -281,6 +242,190 @@ export const getFilterTask = async (userId) => {
     return taskdata;
   } else {
     return false;
+  }
+};
+
+// add new task function
+export const addNewTask = async (userId, taskData) => {
+  if (!userId) return "Token is required";
+  const userTaskRef = ref(db, `tasks/${userId}`);
+
+  const generatedUniqueId = uuidv4();
+
+  const newTaskdata = {
+    id: generatedUniqueId,
+    title: taskData.title,
+    category: taskData.category,
+    dueDate: taskData.dueDate,
+    status: "active",
+    timestamp: formatTimestamp(new Date().getTime()),
+  };
+
+  try {
+    const snapshot = await get(userTaskRef);
+    if (snapshot.exists()) {
+      const notes = snapshot.val();
+      const notesArray = Array.isArray(notes) ? notes : Object.values(notes);
+      notesArray.push(newTaskdata);
+      await set(userTaskRef, notesArray);
+    } else {
+      const notesArray = [newTaskdata];
+      await set(userTaskRef, notesArray);
+    }
+    return { success: true, message: "Task added successfully." };
+  } catch (error) {
+    console.error("Error adding new task:", error);
+    return {
+      success: false,
+      message: "An error occurred while adding the task.",
+    };
+  }
+};
+
+// change the task status
+export const changeTaskItemStatus = async (userId, taskId, status) => {
+  if (!userId || !taskId || !status) {
+    return { success: false, message: "Some required field is missing" };
+  }
+
+  const userTaskRef = ref(db, `tasks/${userId}`);
+
+  try {
+    const snapshot = await get(userTaskRef);
+    if (snapshot.exists()) {
+      const tasks = snapshot.val();
+      const tasksArray = Array.isArray(tasks) ? tasks : Object.values(tasks);
+      
+      const taskIndex = tasksArray.findIndex(task => task && task.id === taskId);
+
+      if (taskIndex !== -1) {
+        tasksArray[taskIndex].status = status;
+        tasksArray[taskIndex].timestamp = formatTimestamp(new Date().getTime());
+
+        await set(userTaskRef, tasksArray);
+        return { success: true, message: "Task updated successfully." };
+      } else {
+        return { success: false, message: "Task update failed" };
+      }
+    } else {
+      return { success: false, message: "No tasks found" };
+    }
+  } catch (error) {
+    console.error("Error updating task status:", error);
+    return {
+      success: false,
+      message: "An error occurred while updating the task status.",
+    };
+  }
+};
+
+export const editTaskItems = async (userId, taskId, updatedData) => {
+  if (!userId || !taskId) return { success: false, message: "User ID and Task ID are required" };
+
+  const userTaskRef = ref(db, `tasks/${userId}`);
+
+  try {
+    const snapshot = await get(userTaskRef);
+    if (snapshot.exists()) {
+      const tasks = snapshot.val();
+      const tasksArray = Array.isArray(tasks) ? tasks : Object.values(tasks);
+      const taskIndex = tasksArray.findIndex(task => task && task.id === taskId);
+
+      if (taskIndex !== -1) {
+        const updatedTask = {
+          ...tasksArray[taskIndex],
+          title: updatedData.title || tasksArray[taskIndex].title,
+          category: updatedData.category || tasksArray[taskIndex].category,
+          dueDate: updatedData.dueDate || tasksArray[taskIndex].dueDate,
+          timestamp: formatTimestamp(new Date().getTime()),
+        };
+
+        if (Array.isArray(tasks)) {
+          tasks[taskIndex] = updatedTask;
+        } else {
+          const taskKey = Object.keys(tasks)[taskIndex];
+          tasks[taskKey] = updatedTask;
+        }
+
+        await set(userTaskRef, tasks);
+        return { success: true, message: "Task updated successfully." };
+      } else {
+        return { success: false, message: "Task not found." };
+      }
+    } else {
+      return { success: false, message: "No tasks found for this user." };
+    }
+  } catch (error) {
+    console.error("Error updating task:", error);
+    return {
+      success: false,
+      message: "An error occurred while updating the task.",
+    };
+  }
+};
+
+
+// delete single task from the database
+export const deleteTrashTaskItems = async (userId, taskId) => {
+  if (!userId || !taskId) return "User ID and Task ID are required";
+  const userTaskRef = ref(db, `tasks/${userId}`);
+
+  try {
+    const snapshot = await get(userTaskRef);
+    if (snapshot.exists()) {
+      const tasks = snapshot.val();
+      const tasksArray = Array.isArray(tasks) ? tasks : Object.values(tasks);
+      const updatedTasks = tasksArray.filter((task) => task.id !== taskId);
+
+      if (updatedTasks.length !== tasksArray.length) {
+        await set(userTaskRef, updatedTasks);
+        return { success: true, message: "Task deleted successfully." };
+      } else {
+        return { success: false, message: "Task deleted failed." };
+      }
+    } else {
+      return { success: false, message: "No tasks found" };
+    }
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    return {
+      success: false,
+      message: "An error occurred while deleting the task.",
+    };
+  }
+};
+
+export const clearTrashTask = async (userId) => {
+  if (!userId) return { success: false, message: "User ID is required!" };
+  const userNotesRef = ref(db, `tasks/${userId}`);
+
+  try {
+    const snapshot = await get(userNotesRef);
+    if (snapshot.exists()) {
+      const notes = snapshot.val();
+      const deletePromises = [];
+
+      Object.keys(notes).forEach((key) => {
+        if (notes[key]?.status === "deleted") {
+          const noteRef = ref(db, `tasks/${userId}/${key}`);
+          deletePromises.push(remove(noteRef));
+        }
+      });
+
+      await Promise.all(deletePromises);
+      return {
+        success: true,
+        message: "Trash cleared successfully.",
+      };
+    } else {
+      return { success: false, message: "No notes found for user." };
+    }
+  } catch (error) {
+    console.error("Error clearing trash:", error);
+    return {
+      success: false,
+      message: "An error occurred while clearing trash notes.",
+    };
   }
 };
 
@@ -398,160 +543,6 @@ export const filterTaskContainerItem = async (id, allTask) => {
       };
   }
 };
-
-
-export const changeTaskItemStatus = async (userId, taskId, status) => {
-  if (!userId || !taskId || !status) return "Some required field is missing";
-  const database = getDatabase();
-  const userTaskRef = ref(database, `tasks/${userId}`);
-
-  try {
-    const snapshot = await get(userTaskRef);
-    if (snapshot.exists()) {
-      const tasks = snapshot.val();
-      const tasksArray = Array.isArray(tasks) ? tasks : Object.values(tasks);
-      const taskIndex = tasksArray.findIndex((task) => task.id === taskId);
-
-      if (taskIndex !== -1) {
-        tasksArray[taskIndex].status = status;
-        tasksArray[taskIndex].timestamp = formatTimestamp(new Date().getTime());
-
-        await set(userTaskRef, tasksArray);
-        return { success: true, message: "Task updated successfully." };
-      } else {
-        return { success: false, message: "Task updated failed" };
-      }
-    } else {
-      return { success: false, message: "No tasks found" };
-    }
-  } catch (error) {
-    console.error("Error updating task status:", error);
-    return {
-      success: false,
-      message: "An error occurred while updating the task status.",
-    };
-  }
-};
-
-export const editTaskItems = async (userId, taskId, updatedData) => {
-  if (!userId || !taskId) return "User ID and Task ID are required";
-
-  const database = getDatabase();
-  const userTaskRef = ref(database, `tasks/${userId}`);
-
-  try {
-    const snapshot = await get(userTaskRef);
-    if (snapshot.exists()) {
-      const tasks = snapshot.val();
-      const taskIndex = Array.isArray(tasks)
-        ? tasks.findIndex((task) => task.id === taskId)
-        : Object.keys(tasks).find((key) => tasks[key].id === taskId);
-
-      if (taskIndex !== -1) {
-        // Update the specific task with new data
-        const updatedTask = {
-          ...tasks[taskIndex],
-          title: updatedData.title || tasks[taskIndex].title,
-          category: updatedData.category || tasks[taskIndex].category,
-          dueDate: updatedData.dueDate || tasks[taskIndex].dueDate,
-          timestamp: formatTimestamp(new Date().getTime()),
-        };
-
-        // Update the tasks array/object
-        if (Array.isArray(tasks)) {
-          tasks[taskIndex] = updatedTask;
-        } else {
-          tasks[taskIndex] = updatedTask;
-        }
-
-        await set(userTaskRef, tasks);
-        return { success: true, message: "Task updated successfully." };
-      } else {
-        return { success: false, message: "Task not found." };
-      }
-    } else {
-      return { success: false, message: "No tasks found for this user." };
-    }
-  } catch (error) {
-    console.error("Error updating task:", error);
-    return {
-      success: false,
-      message: "An error occurred while updating the task.",
-    };
-  }
-};
-
-
-// delete single task from the database
-export const deleteTrashTaskItems = async (userId, taskId) => {
-  if (!userId || !taskId) return "User ID and Task ID are required";
-  const database = getDatabase();
-  const userTaskRef = ref(database, `tasks/${userId}`);
-
-  try {
-    const snapshot = await get(userTaskRef);
-    if (snapshot.exists()) {
-      const tasks = snapshot.val();
-      const tasksArray = Array.isArray(tasks) ? tasks : Object.values(tasks);
-      const updatedTasks = tasksArray.filter((task) => task.id !== taskId);
-
-      if (updatedTasks.length !== tasksArray.length) {
-        await set(userTaskRef, updatedTasks);
-        return { success: true, message: "Task deleted successfully." };
-      } else {
-        return { success: false, message: "Task deleted failed." };
-      }
-    } else {
-      return { success: false, message: "No tasks found" };
-    }
-  } catch (error) {
-    console.error("Error deleting task:", error);
-    return {
-      success: false,
-      message: "An error occurred while deleting the task.",
-    };
-  }
-};
-
-
-export const clearTrashTask = async (userId) => {
-  if (!userId) return { success: false, message: "User ID is required!" };
-  const database = getDatabase();
-  const userNotesRef = ref(database, `tasks/${userId}`);
-
-  try {
-    const snapshot = await get(userNotesRef);
-    if (snapshot.exists()) {
-      const notes = snapshot.val();
-      const deletePromises = [];
-
-      Object.keys(notes).forEach((key) => {
-        if (notes[key]?.status === "deleted") {
-          const noteRef = ref(database, `tasks/${userId}/${key}`);
-          deletePromises.push(remove(noteRef));
-        }
-      });
-
-      await Promise.all(deletePromises);
-      return {
-        success: true,
-        message: "Trash cleared successfully.",
-      };
-    } else {
-      return { success: false, message: "No notes found for user." };
-    }
-  } catch (error) {
-    console.error("Error clearing trash:", error);
-    return {
-      success: false,
-      message: "An error occurred while clearing trash notes.",
-    };
-  }
-};
-
-
-
-
 // getMotivateMessage
 export function getMotivateMessage() {
   const messages = {

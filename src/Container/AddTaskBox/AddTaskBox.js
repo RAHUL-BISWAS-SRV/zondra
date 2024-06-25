@@ -4,7 +4,7 @@ import { getCurrentDate, addNewTask, filterTaskContainerItem, editTaskItems, get
 import { GlobalStore } from "@/ContextAPI/Store";
 
 const AddTaskBox = () => {
-  const {isAuth, taskItem, setTaskItem, setAllTasks, setTaskData, activeTaskBtn} = useContext(GlobalStore);
+  const {isAuth, taskItem, setTaskItem, setAllTasks, setTaskData, activeTaskBtn, setIsLoader} = useContext(GlobalStore);
   const [taskBtn, setTaskBtn] = useState("Add Task")
   const [taskValue, setTaskValue] = useState("");
   const [category, setCategory] = useState("welcome");
@@ -13,6 +13,7 @@ const AddTaskBox = () => {
 
 
   const handleAddTask = async () => {
+    setIsLoader(true);
     if(taskValue  === ""){
       alert("Please Enter Task");
       return;
@@ -25,10 +26,8 @@ const AddTaskBox = () => {
     }
     const result = await addNewTask(isAuth, taskData);
     if(result.success){
-      alert(result.message);
       emptyForm()
     }else{
-      alert(result.message);
       setTaskBtn("Try Again")
       console.log("Task:", result.message);
     }
@@ -46,12 +45,13 @@ const AddTaskBox = () => {
 
 
   const editTaskHandler = async () => {
-    const updateTaskdata = {
+    setIsLoader(true);
+    const updateTaskData = {
       title: taskValue,
       category: category,
       dueDate: dueDate,
     };
-    const result = await editTaskItems(isAuth, taskItem.id, updateTaskdata);
+    const result = await editTaskItems(isAuth, taskItem.id, updateTaskData);
     if (result.success) {
       emptyForm();
       setTaskItem(false);
@@ -75,6 +75,7 @@ const AddTaskBox = () => {
       const filterTask = await filterTaskContainerItem(activeTaskBtn, result);
       setTaskData(filterTask);
     }
+    setIsLoader(false)
   }
 
   return (

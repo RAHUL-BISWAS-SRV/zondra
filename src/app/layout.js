@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.scss";
 import Navbar from "@/Container/Navbar/Navbar";
 import ContextProvider from "@/ContextAPI/ContextProvider";
+import Loader from "@/Container/Loader/Loader";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <ContextProvider>
           <Navbar />
           {children}
+          <Loader/>
         </ContextProvider>
       </body>
     </html>

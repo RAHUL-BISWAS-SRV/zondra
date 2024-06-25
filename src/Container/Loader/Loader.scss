@@ -1,0 +1,34 @@
+@import "../../app/globals.scss";
+
+.loaderContainer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #ffffff33;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .logo {
+        width: 90px;
+        height: 100px;
+        animation: rotateAndTransform 2s infinite;
+    }
+    @keyframes rotateAndTransform {
+        0% {
+            transform: rotate(0deg);
+        }
+        50% {
+            transform: rotatey(360deg);
+        }
+        75% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+}

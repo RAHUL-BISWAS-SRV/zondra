@@ -10,7 +10,7 @@ import {
 
 const ContextProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState();
-  const [isLoader, setIsLoader] = useState(true)
+  const [isLoader, setIsLoader] = useState(true);
   const [userDetails, setUserDetails] = useState(false);
   const [activeTaskBtn, setActiveTaskBtn] = useState("today");
   const [allTasks, setAllTasks] = useState(false);
@@ -23,6 +23,7 @@ const ContextProvider = ({ children }) => {
       getUserProfileDetail();
       getAllTasks();
     }
+    setIsLoader(false);
   }, [isAuth]);
 
   async function getAuthToken() {
@@ -48,9 +49,7 @@ const ContextProvider = ({ children }) => {
   async function getFilterTaskwithContainer(id, tasks) {
     const filterTask = await filterTaskContainerItem(id, tasks);
     setTaskData(filterTask);
-    setIsLoader(false);
   }
-
 
   return (
     <GlobalStore.Provider

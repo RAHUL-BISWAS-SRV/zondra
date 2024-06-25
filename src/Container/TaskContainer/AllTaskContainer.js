@@ -5,14 +5,16 @@ import { GlobalStore } from "@/ContextAPI/Store";
 import { getFilterTask, filterTaskContainerItem, clearTrashTask } from "@/Functions/Functions";
 
 const AllTaskContainer = (props) => {
-  const {isAuth, setTaskData, setAllTasks, activeTaskBtn} = useContext(GlobalStore);
+  const {isAuth, setTaskData, setAllTasks, activeTaskBtn, setIsLoader} = useContext(GlobalStore);
 
 
   const clearAlltrashTaskHandler = async () => {
+    setIsLoader(true)
     const result = await clearTrashTask(isAuth);
     if (result.success) {
       updateTaskList()
     }
+    setIsLoader(false);
   };
   async function updateTaskList() {
     const result = await getFilterTask(isAuth);
@@ -25,7 +27,6 @@ const AllTaskContainer = (props) => {
 
   return (
     <div className="AllTaskListContainer">
-      {/* <p className="titleHead fw-bold">{props.data?.content}</p> */}
       <div className="trashHeaderBox">
         <p className="titleHead fw-bold">{props.data?.content}</p>
         {props.data.id === "trash" && (

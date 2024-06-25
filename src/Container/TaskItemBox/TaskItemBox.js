@@ -5,37 +5,50 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import RestoreIcon from "@mui/icons-material/Restore";
 import { useContext } from "react";
 import { GlobalStore } from "@/ContextAPI/Store";
-import { changeTaskItemStatus, getFilterTask, filterTaskContainerItem, deleteTrashTaskItems } from "@/Functions/Functions";
+import {
+  changeTaskItemStatus,
+  getFilterTask,
+  filterTaskContainerItem,
+  deleteTrashTaskItems,
+} from "@/Functions/Functions";
 
+const TaskItemBox = ({ task }) => {
+  const {
+    isAuth,
+    setAllTasks,
+    setTaskData,
+    activeTaskBtn,
+    setTaskItem,
+    setIsLoader,
+  } = useContext(GlobalStore);
 
-const TaskItemBox = (props) => {
-  const {isAuth, setAllTasks, setTaskData, activeTaskBtn, setTaskItem} = useContext(GlobalStore);
-
-  const changeTaskStatusCompleted = async () => {
-    const TaskId = props?.task?.id;
-    const result = await changeTaskItemStatus(isAuth, TaskId, "completed");
-    if (result.success) {
-      updateTaskList();
+  const changeTaskStatus = async (status) => {
+    try {
+      if (!task || !task.id) {
+        throw new Error("Task is undefined or does not have an ID.");
+      }
+      setIsLoader(true);
+      const TaskId = task.id;
+      const result = await changeTaskItemStatus(isAuth, TaskId, status);
+      if (result.success) {
+        updateTaskList();
+      } else {
+        console.error("Failed to update task:", result.message);
+      }
+    } catch (error) {
+      console.error("Error in changeTaskStatus:", error.message);
+    } finally {
+      setIsLoader(false);
     }
   };
-  const changeTaskStatusActive = async () => {
-    const TaskId = props?.task?.id;
-    const result = await changeTaskItemStatus(isAuth, TaskId, "active");
-    if (result.success) {
-      updateTaskList();
-    }
-  };
 
-  const deleteTaskHandler = async () => {
-    const TaskId = props?.task?.id;
-    const result = await changeTaskItemStatus(isAuth, TaskId, "deleted");
-    if (result.success) {
-      updateTaskList();
-    }
-  };
+  const changeTaskStatusCompleted = () => changeTaskStatus("completed");
+  const changeTaskStatusActive = () => changeTaskStatus("active");
+  const deleteTaskHandler = () => changeTaskStatus("deleted");
 
   const deleteTaskTrashHandler = async () => {
-    const TaskId = props?.task?.id;
+    setIsLoader(true);
+    const TaskId = task?.id;
     const result = await deleteTrashTaskItems(isAuth, TaskId);
     if (result.success) {
       updateTaskList();
@@ -49,12 +62,13 @@ const TaskItemBox = (props) => {
       const filterTask = await filterTaskContainerItem(activeTaskBtn, result);
       setTaskData(filterTask);
     }
+    setIsLoader(false);
   }
 
   const editTaskHandler = async () => {
-    setTaskItem(props?.task);
+    setTaskItem(task);
   };
-  
+
   const copyItemHandler = (title) => {
     navigator.clipboard.writeText(title);
   };
@@ -62,13 +76,13 @@ const TaskItemBox = (props) => {
   return (
     <div className="taskItemContainer">
       <div className="task-data">
-        {props?.task?.status === "active" ? (
+        {task?.status === "active" ? (
           <input
             type="checkbox"
             className="form-check-input"
             onClick={changeTaskStatusCompleted}
           />
-        ) : props?.task?.status === "completed" ? (
+        ) : task?.status === "completed" ? (
           <input
             type="checkbox"
             className="form-check-input"
@@ -76,15 +90,12 @@ const TaskItemBox = (props) => {
             checked
           />
         ) : (
-          <input
-            type="checkbox"
-            className="form-check-input"
-          />
+          <input type="checkbox" className="form-check-input" />
         )}
-        <p className="para">{props?.task?.title}</p>
+        <p className="para">{task?.title}</p>
       </div>
       <div className="btn-cntnr">
-        {props?.task?.status === "deleted" ? (
+        {task?.status === "deleted" ? (
           <RestoreIcon
             className="bi bi-trash-fill"
             onClick={changeTaskStatusActive}
@@ -94,9 +105,9 @@ const TaskItemBox = (props) => {
         )}
         <ContentCopyIcon
           className="bi bi-copy-fill"
-          onClick={() => copyItemHandler(props?.task?.title)}
+          onClick={() => copyItemHandler(task?.title)}
         />
-        {props?.task?.status === "deleted" ? (
+        {task?.status === "deleted" ? (
           <DeleteIcon
             className="bi bi-trash-fill"
             onClick={deleteTaskTrashHandler}
