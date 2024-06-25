@@ -158,7 +158,7 @@ const SignupForm = ({ onSubmit }) => {
 const Page = () => {
   // const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("login");
-  const {setIsAuth, isAuth} = useContext(GlobalStore);
+  const {setIsAuth} = useContext(GlobalStore);
   const redirect = useRouter();
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
