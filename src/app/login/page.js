@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { TextField, Button, IconButton, Tab, Tabs } from "@mui/material";
 import { Email, Lock, Person } from "@mui/icons-material";
 import { GlobalStore } from "@/ContextAPI/Store";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { loginUsers, registerNewUser } from "@/Functions/Functions";
 import { useRouter } from "next/navigation";
+
 const LoginForm = ({ onSubmit }) => {
   const {
     register,
